@@ -13,19 +13,20 @@ try:
   while success:
     success,image = vidcap.read()
     print('Read a new frame: ' + str(success) + ' : ' + str(count))
-    cv2.imwrite("frame%d.jpg" % count, image)     # save frame as JPEG file
+    cv2.imwrite("frame%d.jpg" % count, image)     # save frame as .jpg file
     count += 1
 
-    if (count > 1):
+    if (count > 1): # once there are at least 2 images extracted, go through each file created
+      
         imageA = cv2.imread("frame" + str(count - 2) +".jpg" , 0)
         imageB = cv2.imread("frame"+str(count - 1)+".jpg" , 0)
         
-        score = compare_ssim(imageA, imageB)
+        ssim = compare_ssim(imageA, imageB) # calculate their ssim
         
-        if (score > 0.987):
+        if (ssim > 0.987): # if they are similar enough, delete one of them
             os.remove("frame%d.jpg" % (count - 2))
 
-except Exception as e:
+except Exception as e: # displays an error message instead of closing the program
   print(e)
   input('Press ENTER to exit: ')
 
